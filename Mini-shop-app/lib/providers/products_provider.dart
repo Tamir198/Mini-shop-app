@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product.dart';
+import './product.dart';
 //TL;DR - this is a class that will be provided to the provider
 //This is a class is the provides class to some provider - this class holds the data that will be register
 //to the provider
@@ -44,10 +44,14 @@ class Products with ChangeNotifier  {
   ];
 
 
-  //Return a copy so I can change items in the class and  call notifyListeners();
+  //Return a copy of items so I can change items in the class and call notifyListeners();
   List<Product> get items {
     // ... is called spread operator
     return [..._items];
+  }
+
+  Product findProductById(String id){
+    return _items.firstWhere((element) => element.id == id);
   }
   void addProduct(){
     //Tell all ChangeNotifier listeners that data was updated

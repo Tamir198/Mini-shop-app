@@ -9,7 +9,6 @@ class ProductsGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     //Set connection to provided class and listen to changes
     //Only this widget and sub children will get re build when the provided class data will change
-
     //Provider.of is generic method, <Products> is the type of data I want to listen to
     final productsData  = Provider.of<Products>(context);
     final products = productsData.items;
@@ -26,12 +25,11 @@ class ProductsGridView extends StatelessWidget {
         mainAxisSpacing: 10,
       ),
       //What will be displayed on the screen
-      itemBuilder: (context, item) => ProductItem(
-
-          products[item].id,
-          products[item].title,
-          products[item].imageUrl
-
+      itemBuilder: (context, item) => ChangeNotifierProvider(
+        //This provider is to tell if the item is favorite or not
+        //IMPORTANT - for every product item I am using new provider
+        create: (BuildContext context) => products[item],
+        child: ProductItem(),
       ),
       itemCount: products.length,
       //const prevent padding from being rebuild for every time build() is called
