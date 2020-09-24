@@ -8,37 +8,40 @@ import 'package:shop_app/screens/product_detail_screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    final product = Provider.of<Product>(context);
+    //One way to listen to provider
+    //final product = Provider.of<Product>(context);
     final Color iconColor = Theme.of(context).accentColor;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      //Because GridTile don`t have on click method I am wrapping it with GestureDetector
-      child: GestureDetector(
-        onTap: () {
-       
-          Navigator.of(context).pushNamed(ProductDetailScreen.routName, arguments: product.id);
-        },
-        child: GridTile(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
-          ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black87,
-            leading: IconButton(
-              icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              color: iconColor,
-              onPressed: () {
-                product.toggleFavorite();
-              },
+    //Consumer is another way to listen to provider
+    return Consumer<Product>(
+      builder: (BuildContext context, product, Widget child) => ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        //Because GridTile don`t have on click method I am wrapping it with GestureDetector
+        child: GestureDetector(
+          onTap: () {
+
+            Navigator.of(context).pushNamed(ProductDetailScreen.routName, arguments: product.id);
+          },
+          child: GridTile(
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              color: iconColor,
-              onPressed: () {},
+            footer: GridTileBar(
+              backgroundColor: Colors.black87,
+              leading: IconButton(
+                icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
+                color: iconColor,
+                onPressed: () {
+                  product.toggleFavorite();
+                },
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                color: iconColor,
+                onPressed: () {},
+              ),
+              title: Text(product.title, textAlign: TextAlign.center),
             ),
-            title: Text(product.title, textAlign: TextAlign.center),
           ),
         ),
       ),

@@ -25,10 +25,10 @@ class ProductsGridView extends StatelessWidget {
         mainAxisSpacing: 10,
       ),
       //What will be displayed on the screen
-      itemBuilder: (context, item) => ChangeNotifierProvider(
+      itemBuilder: (context, item) => ChangeNotifierProvider.value(
         //This provider is to tell if the item is favorite or not
         //IMPORTANT - for every product item I am using new provider
-        create: (BuildContext context) => products[item],
+        value: products[item],
         child: ProductItem(),
       ),
       itemCount: products.length,
