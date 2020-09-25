@@ -5,7 +5,7 @@ import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 //This is the item that will get rendered for every greed view item as product
-class ProductItem extends StatelessWidget {2
+class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ class Cart with ChangeNotifier {
 
   void addToCartItems(String productId, double price, String title) {
     if (_cartItems.containsKey(productId)) {
-      
+
       //If exist just change quantity
       _cartItems.update(
           productId,
