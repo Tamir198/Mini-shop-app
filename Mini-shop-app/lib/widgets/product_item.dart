@@ -9,16 +9,13 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //One way to listen to provider
-    //final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
     final Color iconColor = Theme.of(context).accentColor;
-    //Consumer is another way to listen to provider
-    return Consumer<Product>(
-      builder: (BuildContext context, product, Widget child) => ClipRRect(
+    return ClipRRect(
         borderRadius: BorderRadius.circular(10),
         //Because GridTile don`t have on click method I am wrapping it with GestureDetector
         child: GestureDetector(
           onTap: () {
-
             Navigator.of(context).pushNamed(ProductDetailScreen.routName, arguments: product.id);
           },
           child: GridTile(
@@ -28,13 +25,15 @@ class ProductItem extends StatelessWidget {
             ),
             footer: GridTileBar(
               backgroundColor: Colors.black87,
-              leading: IconButton(
+              //Consumer is another way to listen to provider, by doing it like this only this part will get rebuild and npt entire widget tree
+              leading: Consumer<Product>(
+                builder: (BuildContext context, product, Widget child) => IconButton(
                 icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
                 color: iconColor,
                 onPressed: () {
                   product.toggleFavorite();
                 },
-              ),
+              )),
               trailing: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 color: iconColor,
@@ -44,7 +43,7 @@ class ProductItem extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 }

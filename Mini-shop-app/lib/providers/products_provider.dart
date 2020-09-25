@@ -43,12 +43,21 @@ class Products with ChangeNotifier  {
     ),
   ];
 
+  bool _shouldShowFavoritesOnly = false;
 
   //Return a copy of items so I can change items in the class and call notifyListeners();
   List<Product> get items {
     // ... is called spread operator
     return [..._items];
   }
+
+  List<Product> get favorites {
+    // ... is called spread operator
+    return _items.where((product) => product.isFavorite).toList();
+  }
+
+
+
 
   Product findProductById(String id){
     return _items.firstWhere((element) => element.id == id);

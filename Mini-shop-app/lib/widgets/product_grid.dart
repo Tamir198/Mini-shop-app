@@ -4,6 +4,10 @@ import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/widgets/product_item.dart';
 
 class ProductsGridView extends StatelessWidget {
+  bool _showFavorites;
+
+  ProductsGridView(this._showFavorites);
+
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,7 @@ class ProductsGridView extends StatelessWidget {
     //Only this widget and sub children will get re build when the provided class data will change
     //Provider.of is generic method, <Products> is the type of data I want to listen to
     final productsData  = Provider.of<Products>(context);
-    final products = productsData.items;
+    final products = _showFavorites ? productsData.favorites :productsData.items;
     return GridView.builder(
       //structure of the greed (how many columns rows...)
       //SliverGridDelegateWithFixedCrossAxisCount - show certain amount of item on the screen
