@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
@@ -10,8 +11,11 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //One way to listen to provider
-    final product = Provider.of<Product>(context, listen: false);
+    final Product product = Provider.of<Product>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context, listen: false);
+
     final Color iconColor = Theme.of(context).accentColor;
+
     return ClipRRect(
         borderRadius: BorderRadius.circular(10),
         //Because GridTile don`t have on click method I am wrapping it with GestureDetector
@@ -38,7 +42,9 @@ class ProductItem extends StatelessWidget {
               trailing: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 color: iconColor,
-                onPressed: () {},
+                onPressed: () {
+                  cart.addToCartItems(product.id, product.price, product.title);
+                },
               ),
               title: Text(product.title, textAlign: TextAlign.center),
             ),

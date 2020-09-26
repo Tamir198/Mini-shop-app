@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/cart_item.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'providers/products_provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/product_overview_screen.dart';
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
     //provides data to its children's to listen to
     //This is why he provider must be above  those children's who need the data in the widget tree
 
-    //PROVIDERS TYPES:
+    /**PROVIDERS TYPES:**/
     /*If I depend on the context use
         return ChangeNotifierProvider(
       create: (BuildContext context) => provider(),
@@ -23,10 +25,26 @@ class MyApp extends StatelessWidget {
     If not you can just pass value:
       return ChangeNotifierProvider.value(
          value: my value,
-    * */
-    return ChangeNotifierProvider(
+
+
+    //How to use multiple providers
+          return MultiProvider(
       //Products is the instance class that provided by provider
-      create: (BuildContext context) => Products(),
+     // create: (BuildContext context) => Products(),
+      providers: [
+        ChangeNotifierProvider.value(value: Products()),
+        ChangeNotifierProvider.value(value: Cart()),
+      ],
+    **/
+
+    return MultiProvider(
+
+      //Products is the instance class that provided by provider
+     // create: (BuildContext context) => Products(),
+      providers: [
+        ChangeNotifierProvider(create: (context) =>Products()),
+        ChangeNotifierProvider(create: (context) =>Cart()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
