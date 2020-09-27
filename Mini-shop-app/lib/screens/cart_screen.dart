@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/cart_item.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 
 class CartScreen extends StatelessWidget {
@@ -36,8 +37,20 @@ class CartScreen extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          SizedBox(height: 10),
+          Expanded(child: ListView.builder(
+            itemBuilder: (context, i) => CartItemWidget(
+              //values.toList()[i] -> get the values that are stored in the map
+               cart.items.values.toList()[i].id,
+               cart.items.keys.toList()[i],
+               cart.items.values.toList()[i].title,
+               cart.items.values.toList()[i].price,
+               cart.items.values.toList()[i].quantity,
+           ),
+            itemCount: cart.cartItemsNum
           )
-        ],
+          )],
       ),
     );
   }
