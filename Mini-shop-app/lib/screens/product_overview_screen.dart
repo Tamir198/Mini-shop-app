@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
-import 'package:shop_app/widgets/badge.dart';
+import 'package:shop_app/widgets/badge_widget.dart';
+import 'file:///C:/Users/The%20Vegan/Desktop/shopAppGit/Mini-shop-app/Mini-shop-app/lib/widgets/custom_drawer/drawer_widget.dart';
 import 'package:shop_app/widgets/product_grid.dart';
 
 enum SelectedPopupMenu { Favorites, All }
@@ -44,7 +45,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ),
           Consumer<Cart>(
               builder: (BuildContext context, cart, Widget childOfConsumer) =>
-                  Badge(
+                  BadgeWidget(
                       child: childOfConsumer,
                       value: cart.cartItemsNum.toString()),
               //The child of the consumer, it wont get re build, this is passed to the builder as the
@@ -58,6 +59,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ),
         ],
       ),
+      drawer: AppDrawerWidget(),
       body: ProductsGridView(_shouldShowFavoritesOnly),
     );
   }

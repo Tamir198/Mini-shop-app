@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Badge extends StatelessWidget {
+class BadgeWidget extends StatelessWidget {
   //Accept a widget and value - widget will be the badge icon and value will be the amount
 
-  const Badge({Key key, @required this.child, @required this.value, this.color,}) : super(key: key);
+  const BadgeWidget({Key key, @required this.child, @required this.value, this.color,}) : super(key: key);
 
   final Widget child;
   final String value;
