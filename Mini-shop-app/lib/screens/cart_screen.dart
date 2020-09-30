@@ -26,7 +26,7 @@ class CartScreen extends StatelessWidget {
                   Spacer(),
                   //Element with rounded corners to display information
                   Chip(
-                    label: Text(('\$${cart.totalCartItemAmount}'),
+                    label: Text(('\$${cart.totalCartItemAmount.toStringAsFixed(2)}'),
                     style: TextStyle(color: Theme.of(context).primaryTextTheme.title.color),),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
