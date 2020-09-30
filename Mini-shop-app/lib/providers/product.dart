@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+
 //This is model for the product - the items in the shop
 //This is provided class (data that I will send to the provider) because isFavorite can be changed and I
 //want to tell all listeners that the data has been changed
+
 class Product with ChangeNotifier{
   final String id, title, description, imageUrl;
   final double price;
@@ -21,4 +23,5 @@ class Product with ChangeNotifier{
     //Tell the listeners that Item favorite state has changes
     notifyListeners();
   }
+
 }

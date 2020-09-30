@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/orders_provider.dart';
-import 'file:///C:/Users/The%20Vegan/Desktop/shopAppGit/Mini-shop-app/Mini-shop-app/lib/widgets/custom_drawer/drawer_widget.dart';
-import 'package:shop_app/widgets/order_items_widget.dart';
+
+import '../providers/orders_provider.dart';
+import '../widgets/order_items_widget.dart';
+
+import '../widgets/custom_drawer/drawer_widget.dart';
 
 class OrdersScreen extends StatelessWidget {
   static const routName = 'orders';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import './product.dart';
 //TL;DR - this is a class that will be provided to the provider
 //This is a class is the provides class to some provider - this class holds the data that will be register

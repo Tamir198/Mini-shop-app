@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/orders_screen.dart';
-import 'package:shop_app/widgets/custom_drawer/drawer_item_widget.dart';
+
+import '../../screens/orders_screen.dart';
+import 'drawer_item_widget.dart';
 
 class AppDrawerWidget extends StatelessWidget {
   @override

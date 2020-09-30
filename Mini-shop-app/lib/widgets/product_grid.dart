@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/products_provider.dart';
-import 'package:shop_app/widgets/product_item.dart';
+import '../providers/products_provider.dart';
+import '../widgets/product_item.dart';
 
 class ProductsGridView extends StatelessWidget {
-  bool _showFavorites;
+  final bool _showFavorites;
 
   ProductsGridView(this._showFavorites);
 

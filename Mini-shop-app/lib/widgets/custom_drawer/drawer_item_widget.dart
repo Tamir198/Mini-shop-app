@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DrawerItem extends StatelessWidget {
-  String routName, title;
-  Icon icon;
+  final String routName, title;
+  final Icon icon;
 
   DrawerItem({@required this.routName, @required this.title, @required this.icon});
 

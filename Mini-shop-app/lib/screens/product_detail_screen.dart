@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/products_provider.dart';
+
+import '../providers/products_provider.dart';
+
 //When item from the items grid view is being pressed - this is the screen with the details about the product
 class ProductDetailScreen extends StatelessWidget {
   static const String routName = 'ProductDetailScreen';

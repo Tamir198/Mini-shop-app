@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart_provider.dart';
-import 'package:shop_app/screens/cart_screen.dart';
-import 'package:shop_app/widgets/badge_widget.dart';
-import 'file:///C:/Users/The%20Vegan/Desktop/shopAppGit/Mini-shop-app/Mini-shop-app/lib/widgets/custom_drawer/drawer_widget.dart';
-import 'package:shop_app/widgets/product_grid.dart';
+import '../providers/cart_provider.dart';
+
+import '../screens/cart_screen.dart';
+
+import '../widgets/badge_widget.dart';
+import '../widgets/product_grid.dart';
+import '../widgets/custom_drawer/drawer_widget.dart';
 
 enum SelectedPopupMenu { Favorites, All }
 
