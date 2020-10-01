@@ -1,74 +1,68 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product.dart';
-import 'package:shop_app/widgets/product_item.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
 
-class ProductOverviewScreen extends StatelessWidget {
-  final List<Product> loadedProducts = [
-    Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-    Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    ),
-    Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    ),
-    Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-  ];
+import '../screens/cart_screen.dart';
+
+import '../widgets/badge_widget.dart';
+import '../widgets/product_grid.dart';
+import '../widgets/custom_drawer/drawer_widget.dart';
+
+enum SelectedPopupMenu { Favorites, All }
+
+class ProductOverviewScreen extends StatefulWidget {
+  @override
+  _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+}
+
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  bool _shouldShowFavoritesOnly = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Shop"),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (SelectedPopupMenu selected) {
+              setState(() {
+                //Change the data that inside the provider
+                if (selected == SelectedPopupMenu.All) {
+                  _shouldShowFavoritesOnly = false;
+                } else {
+                  _shouldShowFavoritesOnly = true;
+                }
+              });
+            },
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) =>
+            [
+              PopupMenuItem(
+                  child: Text("Favorites"), value: SelectedPopupMenu.Favorites),
+              PopupMenuItem(
+                  child: Text("Show All"), value: SelectedPopupMenu.All),
+            ],
+          ),
+          Consumer<Cart>(
+              builder: (BuildContext context, cart, Widget childOfConsumer) =>
+                  BadgeWidget(
+                      child: childOfConsumer,
+                      value: cart.cartItemsNum.toString()),
+              //The child of the consumer, it wont get re build, this is passed to the builder as the
+              //childOfConsumer argument
+              child: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CartScreen.routName);
+                },
+              ),
+          ),
+        ],
       ),
-      body: GridView.builder(
-        //structure of the greed (how many columns rows...)
-        //SliverGridDelegateWithFixedCrossAxisCount - show certain amount of item on the screen
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //how many columns
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          //Space between columns
-          crossAxisSpacing: 10,
-          //Space between rows
-          mainAxisSpacing: 10,
-        ),
-        //What will be displayed on the screen
-        itemBuilder: (context, item) => ProductItem(
-
-            loadedProducts[item].id,
-            loadedProducts[item].title,
-            loadedProducts[item].imageUrl
-
-        ),
-        itemCount: loadedProducts.length,
-        //const prevent padding from being rebuild for every time build() is called
-        padding: const EdgeInsets.all(10.0),
-      ),
+      drawer: AppDrawerWidget(),
+      body: ProductsGridView(_shouldShowFavoritesOnly),
     );
   }
 }
