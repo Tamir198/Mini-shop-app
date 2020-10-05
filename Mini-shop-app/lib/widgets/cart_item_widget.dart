@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/cart_provider.dart';
 
 class CartItemWidget extends StatelessWidget {
-  final String id,productId, title;
+  final String id, productId, title;
   final double price;
   final int quantity;
 
-  const CartItemWidget(this.id, this.productId, this.title, this.price, this.quantity);
+  const CartItemWidget(
+      this.id, this.productId, this.title, this.price, this.quantity);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,30 @@ class CartItemWidget extends StatelessWidget {
         margin: cardMargin,
       ),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction){
+      confirmDismiss: (direction) {
+        //Dialog to gonfirm
+        return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Are you sure?"),
+                  content:
+                      Text("Would you like to remove the item from the cart?"),
+                  actions: <Widget>[
+                    //Close the Dialog and pass a value, because showDialog is returning a future
+                    FlatButton(
+                        child: Text("No"),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        }),
+                    FlatButton(
+                        child: Text("Yes"),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        })
+                  ],
+                ));
+      },
+      onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeCartItem(productId);
       },
       child: Card(
@@ -38,8 +63,7 @@ class CartItemWidget extends StatelessWidget {
               leading: CircleAvatar(
                   child: Padding(
                       padding: EdgeInsets.all(5),
-                      child: FittedBox(child: Text('\$$price')))
-              ),
+                      child: FittedBox(child: Text('\$$price')))),
               title: Text(title),
               subtitle: Text('Total: \$${(quantity * price)}'),
               trailing: Text('$quantity x'),
