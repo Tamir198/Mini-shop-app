@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './product.dart';
+
 //TL;DR - this is a class that will be provided to the provider
 //This is a class is the provides class to some provider - this class holds the data that will be register
 //to the provider
@@ -8,7 +9,7 @@ import './product.dart';
 
 //The data of the provider
 
-class Products with ChangeNotifier  {
+class Products with ChangeNotifier {
   List <Product> _items = [
     Product(
       id: 'p1',
@@ -58,15 +59,38 @@ class Products with ChangeNotifier  {
   }
 
 
-
-
-  Product findProductById(String id){
+  Product findProductById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
-  void addProduct(){
+
+  void addProduct(Product product) {
     //Tell all ChangeNotifier listeners that data was updated
+    Product newProduct = Product(title: product.title,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        description: product.description,
+        id: DateTime.now().toString());
+
+    _items.add(newProduct);
+
     notifyListeners();
   }
+
+  void updateProduct(String id, Product newProduct){
+   int productIndex =  _items.indexWhere((product) => product.id == id);
+
+   if(productIndex >= 0){
+     _items[productIndex] = newProduct;
+     notifyListeners();
+   }
+
+  }
+
+  void deleteProduct(String id){
+    _items.removeWhere((product) => product.id == id);
+    notifyListeners();
+  }
+
 }
 
 
