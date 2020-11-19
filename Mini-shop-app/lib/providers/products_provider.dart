@@ -1,7 +1,11 @@
+
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shop_app/network/realtime_database_class.dart';
 import 'package:http/http.dart' as http;
+
 
 import './product.dart';
 
@@ -65,30 +69,39 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct(Product product) {
-    const String url = 'https://udemy-shop-app-course.firebaseio.com/products.json';
-    //Converting data to json json.encode() knows how to convert maps to json
-    http.post(url,
+  Future<void> addProduct(Product product) async {
+
+     //RealtimeDatabaseClass().addProduct(product, items);
+      const String url = 'https://udemy-shop-app-course.firebaseio.com/products.json';
+
+      //Converting data to json, json.encode() knows how to convert maps to json
+      try{
+
+        final http.Response response = await http.post(url,
+
             body: json.encode({
               'title': product.title,
               'description': product.description,
               'price': product.price,
               'imageUrl': product.imageUrl,
               'isFavorite': product.isFavorite,
-            }))
-        .then((response) {
-      //Tell all ChangeNotifier listeners that data was updated
-      Product newProduct = Product(
-          title: product.title,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          id: json.decode(response.body)['name']);
+            }));
+        //Tell all ChangeNotifier listeners that data was updated
+        Product newProduct = Product(
+            title: product.title,
+            price: product.price,
+            imageUrl: product.imageUrl,
+            description: product.description,
+            id: json.decode(response.body)['name']);
 
-      _items.add(newProduct);
+        _items.add(newProduct);
 
-      notifyListeners();
-    });
+      }catch(error){
+        print(error);
+        throw error;
+      }
+     notifyListeners();
+     print("items are $items");
   }
 
   void updateProduct(String id, Product newProduct) {
