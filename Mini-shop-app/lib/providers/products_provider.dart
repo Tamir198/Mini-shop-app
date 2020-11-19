@@ -69,39 +69,11 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addProduct(Product product) async {
 
-     //RealtimeDatabaseClass().addProduct(product, items);
-      const String url = 'https://udemy-shop-app-course.firebaseio.com/products.json';
 
-      //Converting data to json, json.encode() knows how to convert maps to json
-      try{
-
-        final http.Response response = await http.post(url,
-
-            body: json.encode({
-              'title': product.title,
-              'description': product.description,
-              'price': product.price,
-              'imageUrl': product.imageUrl,
-              'isFavorite': product.isFavorite,
-            }));
-        //Tell all ChangeNotifier listeners that data was updated
-        Product newProduct = Product(
-            title: product.title,
-            price: product.price,
-            imageUrl: product.imageUrl,
-            description: product.description,
-            id: json.decode(response.body)['name']);
-
-        _items.add(newProduct);
-
-      }catch(error){
-        print(error);
-        throw error;
-      }
+   Future<void> addProduct(Product product) async {
+     await RealtimeDatabaseClass().addProduct(product, _items);
      notifyListeners();
-     print("items are $items");
   }
 
   void updateProduct(String id, Product newProduct) {

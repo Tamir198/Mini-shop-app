@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class RealtimeDatabaseClass {
 
   //When wrapping function with async it will automatically return a future
-  void addProduct(Product product, List<Product> items) async {
+  Future addProduct(Product product, List<Product> items) async {
 
     const String url = 'https://udemy-shop-app-course.firebaseio.com/products.json';
     //Converting data to json json.encode() knows how to convert maps to json
