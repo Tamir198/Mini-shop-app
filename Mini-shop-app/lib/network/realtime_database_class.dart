@@ -5,8 +5,7 @@ import 'package:shop_app/providers/product.dart';
 import 'package:http/http.dart' as http;
 
 class RealtimeDatabaseClass {
-  final String url =
-      'https://udemy-shop-app-course.firebaseio.com/products.json';
+  final String url = 'https://udemy-shop-app-course.firebaseio.com/products.json';
 
   //When wrapping function with async it will automatically return a future
   Future addProduct(Product product, List<Product> items) async {

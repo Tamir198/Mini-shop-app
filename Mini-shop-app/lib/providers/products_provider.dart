@@ -1,12 +1,8 @@
-
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:shop_app/network/realtime_database_class.dart';
 import 'package:http/http.dart' as http;
-
 
 import './product.dart';
 
@@ -70,28 +66,43 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-   Future<void> addProduct(Product product) async {
-     await RealtimeDatabaseClass().addProduct(product, _items);
-     notifyListeners();
+  Future<void> addProduct(Product product) async {
+    await RealtimeDatabaseClass().addProduct(product, _items);
+    notifyListeners();
   }
 
-  Future<void> fetchAndDisplayProducts() async{
+  Future<void> fetchAndDisplayProducts() async {
     var response = await RealtimeDatabaseClass().fetchData(_items);
     notifyListeners();
     return response;
-
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     int productIndex = _items.indexWhere((product) => product.id == id);
 
+    //patch - override existing data,
+    // does not change  fields that were not sent in the request
+
     if (productIndex >= 0) {
+      final String url =
+          'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+          }));
+
       _items[productIndex] = newProduct;
       notifyListeners();
     }
   }
 
-  void deleteProduct(String id) {
+  void deleteProduct(String id) async {
+    final String url = 'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
+    //delete the content that inside the url path
+    await http.delete(url);
     _items.removeWhere((product) => product.id == id);
     notifyListeners();
   }
