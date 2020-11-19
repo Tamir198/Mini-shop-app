@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:shop_app/network/realtime_database_class.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,11 +70,16 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-
-
    Future<void> addProduct(Product product) async {
      await RealtimeDatabaseClass().addProduct(product, _items);
      notifyListeners();
+  }
+
+  Future<void> fetchAndDisplayProducts() async{
+    var response = await RealtimeDatabaseClass().fetchData(_items);
+    notifyListeners();
+    return response;
+
   }
 
   void updateProduct(String id, Product newProduct) {
