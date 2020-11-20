@@ -27,6 +27,7 @@ class UserProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
+                //todo shoe loading spinner/ trow snackbar when we delete item
                 Provider.of<Products>(context, listen: false).deleteProduct(id);
               },
               color: Theme.of(context).errorColor,

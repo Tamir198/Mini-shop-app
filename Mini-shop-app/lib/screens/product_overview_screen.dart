@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/providers/products_provider.dart';
 import '../providers/cart_provider.dart';
 
 import '../screens/cart_screen.dart';
@@ -18,6 +20,22 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _shouldShowFavoritesOnly = false;
+  bool isInit = true, isLoading = false;
+
+
+  //Using initState would not work because the context is not available yet,
+  //This  lifecycle runs a lot of times, this is the reason for isInit
+  @override
+  void didChangeDependencies() {
+    isLoading = true;
+    if (isInit) {
+      Provider.of<Products>(context, listen: false).fetchAndDisplayProducts();
+    }
+    isInit = false;
+    super.didChangeDependencies();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
