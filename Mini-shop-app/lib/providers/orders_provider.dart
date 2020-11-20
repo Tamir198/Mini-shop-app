@@ -14,7 +14,8 @@ class Orders with ChangeNotifier {
   }
 
   void addOrder(List<CartItem> cartProducts, double total) async {
-    final String url = 'https://udemy-shop-app-course.firebaseio.com/orders.json';
+    final String url =
+        'https://udemy-shop-app-course.firebaseio.com/orders.json';
 
     final DateTime timeStamp = DateTime.now();
     //Post to add new order
@@ -22,7 +23,8 @@ class Orders with ChangeNotifier {
         body: json.encode({
           'amount': total,
           'dateTime': timeStamp.toIso8601String(),
-          'product': cartProducts.map((cartProduct) => {
+          'product': cartProducts
+              .map((cartProduct) => {
                     'id': cartProduct.id,
                     'title': cartProduct.title,
                     'quantity': cartProduct.quantity,
@@ -40,6 +42,31 @@ class Orders with ChangeNotifier {
             timeOfOrder: DateTime.now(),
             products: cartProducts));
 
+    notifyListeners();
+  }
+
+  Future<void> getOrders() async {
+
+    final String url = 'https://udemy-shop-app-course.firebaseio.com/orders.json';
+    final response = await http.get(url);
+    final List<OrderItem> loadedData = [];
+    final Map<String, dynamic> data = json.decode(response.body);
+
+    if(data == null) return;
+    data.forEach((orderId, data) {
+      loadedData.add(OrderItem(
+          id: orderId,
+          amount: data['amount'],
+          timeOfOrder: DateTime.parse(data['dateTime']),
+          products: (data['products'] as List<dynamic>)
+              .map((item) => CartItem(
+                  id: item['id'],
+                  title: item['title'],
+                  quantity: item['quantity'],
+                  price: item['price']))
+              .toList()));
+    });
+    _orders = loadedData.reversed;
     notifyListeners();
   }
 }

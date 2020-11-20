@@ -84,8 +84,7 @@ class Products with ChangeNotifier {
     // does not change  fields that were not sent in the request
 
     if (productIndex >= 0) {
-      final String url =
-          'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
+      final String url = 'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,

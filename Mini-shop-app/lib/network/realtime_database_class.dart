@@ -44,6 +44,7 @@ class RealtimeDatabaseClass {
       final Map<String, dynamic> data = json.decode(response.body);
 
       print(json.decode(response.body));
+      if(data == null) return;
       data.forEach((productId, value) {
         items.add(Product(
             id: productId,
