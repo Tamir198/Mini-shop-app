@@ -7,8 +7,22 @@ import '../widgets/order_items_widget.dart';
 
 import '../widgets/custom_drawer/drawer_widget.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   static const routName = 'orders';
+
+  @override
+  _OrdersScreenState createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+
+  //Another different example from what I have in ProductOverviewScreen to send a get http request
+  //There is not problem  context of.. if I add listen: false
+  @override
+  void initState() {
+    super.initState();
+      Provider.of<Orders>(context, listen: false).getOrders();
+  }
 
   @override
   Widget build(BuildContext context) {

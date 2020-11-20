@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shop_app/network/realtime_database_class.dart';
+import 'package:http/http.dart' as http;
 
 import './product.dart';
 
@@ -10,14 +14,14 @@ import './product.dart';
 //The data of the provider
 
 class Products with ChangeNotifier {
-  List <Product> _items = [
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
       price: 29.99,
       imageUrl:
-      'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
     ),
     Product(
       id: 'p2',
@@ -25,7 +29,7 @@ class Products with ChangeNotifier {
       description: 'A nice pair of trousers.',
       price: 59.99,
       imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
     ),
     Product(
       id: 'p3',
@@ -33,7 +37,7 @@ class Products with ChangeNotifier {
       description: 'Warm and cozy - exactly what you need for the winter.',
       price: 19.99,
       imageUrl:
-      'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
     ),
     Product(
       id: 'p4',
@@ -41,7 +45,7 @@ class Products with ChangeNotifier {
       description: 'Prepare any meal you want.',
       price: 49.99,
       imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
 
@@ -58,39 +62,47 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
-
   Product findProductById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct(Product product) {
-    //Tell all ChangeNotifier listeners that data was updated
-    Product newProduct = Product(title: product.title,
-        price: product.price,
-        imageUrl: product.imageUrl,
-        description: product.description,
-        id: DateTime.now().toString());
-
-    _items.add(newProduct);
-
+  Future<void> addProduct(Product product) async {
+    await RealtimeDatabaseClass().addProduct(product, _items);
     notifyListeners();
   }
 
-  void updateProduct(String id, Product newProduct){
-   int productIndex =  _items.indexWhere((product) => product.id == id);
-
-   if(productIndex >= 0){
-     _items[productIndex] = newProduct;
-     notifyListeners();
-   }
-
+  Future<void> fetchAndDisplayProducts() async {
+    var response = await RealtimeDatabaseClass().fetchData(_items);
+    notifyListeners();
+    return response;
   }
 
-  void deleteProduct(String id){
+  Future<void> updateProduct(String id, Product newProduct) async {
+    int productIndex = _items.indexWhere((product) => product.id == id);
+
+    //patch - override existing data,
+    // does not change  fields that were not sent in the request
+
+    if (productIndex >= 0) {
+      final String url = 'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+          }));
+
+      _items[productIndex] = newProduct;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) async {
+    final String url = 'https://udemy-shop-app-course.firebaseio.com/products/$id.json';
+    //delete the content that inside the url path
+    await http.delete(url);
     _items.removeWhere((product) => product.id == id);
     notifyListeners();
   }
-
 }
-
-
