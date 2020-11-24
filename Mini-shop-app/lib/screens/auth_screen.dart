@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/network/custon_exeption.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -100,7 +103,23 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _showErrorDialog(String error) {
+    showDialog(
+        context: context, builder: (context) => AlertDialog(
+              title: Text('An error occurred'),
+              content: Text(error),
+              actions: [
+                FlatButton(
+                  child: Text('ok'),
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
+  void _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -109,14 +128,48 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<AuthProvider>(context, listen: false).login(
+          _authData['email'],
+          _authData['password'],
+        );
+      } else {
+        // Sign user up
+        await Provider.of<AuthProvider>(context, listen: false).signup(
+          _authData['email'],
+          _authData['password'],
+        );
+      }
+      //A way to filter what exception is thrown
+    } on CustomException catch (error) {
+      String mgs = 'Auth failed';
+      //Using if and not switch because firease don`t always provide clea identifier for the error message
+      String errorString = error.toString();
+      if (errorString.contains("EMAIL_EXISTS")) {
+        mgs = 'The Email is taken';
+      } else if (errorString.contains('INVALID_EMAIL')) {
+        mgs = 'The Email is NOT valid';
+      } else if (errorString.contains('WEAK_PASSWORD')) {
+        mgs = 'Password too weak';
+      } else if (errorString.contains('EMAIL_NOT_FOUND')) {
+        mgs = 'User with that email does not exist';
+      } else if (errorString.contains('INVALID_PASSWORD')) {
+        mgs = 'Invalid password';
+      }
+
+      _showErrorDialog(mgs);
+
+    } catch (error) {
+      String msg = 'A problem occurred, try again later';
+      _showErrorDialog(error);
     }
+
     setState(() {
       _isLoading = false;
     });
+
   }
 
   void _switchAuthMode() {
