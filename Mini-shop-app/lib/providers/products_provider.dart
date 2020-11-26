@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shop_app/network/realtime_database_class.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/providers/auth_provider.dart';
 
 import './product.dart';
 
@@ -50,10 +51,18 @@ class Products with ChangeNotifier {
   ];
 
   bool _shouldShowFavoritesOnly = false;
+  String _authToken;
+
+  Products(this._authToken,this._items);
+
+  set authToken(String value) {
+    _authToken = value;
+  }
 
   //Return a copy of items so I can change items in the class and call notifyListeners();
   List<Product> get items {
     // ... is called spread operator
+    print(' $items[0].toString()) sasasssa');
     return [..._items];
   }
 
@@ -67,12 +76,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    await RealtimeDatabaseClass().addProduct(product, _items);
+    await RealtimeDatabaseClass(authToken).addProduct(product, _items);
     notifyListeners();
   }
 
   Future<void> fetchAndDisplayProducts() async {
-    var response = await RealtimeDatabaseClass().fetchData(_items);
+    var response = await RealtimeDatabaseClass(authToken).fetchData(_items);
     notifyListeners();
     return response;
   }
